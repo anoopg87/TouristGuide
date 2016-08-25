@@ -36,20 +36,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         setSupportActionBar(binding.toolbar);
+        // setting the home button to navigate to parent activity
          getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         viewModel=new ActivityMapViewModel(MapsActivity.this,this);
         binding.setHandler(viewModel);
         type=getIntent().getStringExtra(TYPE);
         location=getIntent().getParcelableExtra(LOCATION);
+        // setting up connectivity change listener
         TouristGuideApp.setConnectivityChangeListener(this);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        // initializing the map with the current location
         LatLng latLng=new LatLng(location.getLatitude(),location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         viewModel.setGoogleMap(mMap);
+        // staring search for POI
         viewModel.initPOISearch(type,location);
     }
 
@@ -65,6 +69,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void showSnackBarWithAction(String message) {
+
+        // SnackBar message for setting the selected location as starting point
         Snackbar snackbar = Snackbar
                 .make( binding.mainContainer,message, Snackbar.LENGTH_LONG)
                 .setAction(TouristGuideApp.getStringRes(R.string.yes), view -> {
@@ -81,6 +87,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onNetworkConnectionChanged(boolean isConnected) {
 
+        // on connectivity change
         if(!isConnected) {
             Snackbar snackbar = Snackbar
                     .make(binding.mainContainer, TouristGuideApp.getStringRes(R.string.please_check_internet_connection), Snackbar.LENGTH_LONG);

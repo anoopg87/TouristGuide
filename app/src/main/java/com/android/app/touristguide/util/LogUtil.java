@@ -4,6 +4,8 @@ import android.util.Log;
 
 public class LogUtil {
 
+
+    // LogUtil for logging the messages
     public static void debug(String tag,String message){
         Log.d(tag,message);
     }

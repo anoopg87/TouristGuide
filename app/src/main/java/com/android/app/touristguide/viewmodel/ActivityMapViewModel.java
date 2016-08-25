@@ -58,6 +58,7 @@ public class ActivityMapViewModel extends BaseObservable{
     public ActivityMapViewModel(Context context, MapsActivityView view) {
         this.context = context;
         this.view = view;
+        // setting up POIList with null value
         setupPOIList();
     }
 
@@ -76,6 +77,8 @@ public class ActivityMapViewModel extends BaseObservable{
 
     private void invokePOIService() {
 
+        // invoking the webservice by checking the internet connection
+
 
         if(ConnectivityReceiver.isConnected()) {
             String loc = location.getLatitude() + "," + location.getLongitude();
@@ -84,6 +87,8 @@ public class ActivityMapViewModel extends BaseObservable{
             poiServiceImplementation.invokePoiService(loc, "5000", type, new POIServiceCallback() {
                 @Override
                 public void onResponse(POIResponse poiList) {
+
+                    // filtering the 20 results from the webservice callback
 
                     if (poiList.getResults().size() > 20) {
                         setResults(poiList.getResults().subList(0, 19));
@@ -117,6 +122,7 @@ public class ActivityMapViewModel extends BaseObservable{
         adapter=new RecyclerViewBindingAdapter<>(R.layout.poi_detail_layout, BR.poi,results);
         adapter.setItemClickListener((position, item) -> {
 
+            // ask for setting the location as start up location
             view.showSnackBarWithAction(TouristGuideApp.getStringRes(R.string.set_as_startup_location));
             startPosition=position;
 
@@ -125,6 +131,8 @@ public class ActivityMapViewModel extends BaseObservable{
     }
 
     private void addMarkerToMap() {
+
+        // adding markers for all the location listed
         for (Result poi : results) {
             locationList.add(poi.getGeometry().getLocation());
             LatLng latLng = new LatLng(poi.getGeometry().getLocation().getLat(), poi.getGeometry().getLocation().getLng());
@@ -142,8 +150,11 @@ public class ActivityMapViewModel extends BaseObservable{
     }
 
     public void setAsStartingPoint() {
+
+
         googleMap.clear();
         addMarkerToMap();
+        // drawing the ploygon on map with given points and start up location by calculating shortest distance
         MapUtil.drawPolygon(googleMap,locationList,startPosition);
     }
 }

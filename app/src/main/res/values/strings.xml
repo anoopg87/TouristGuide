@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Tourist Guide</string>
+     <string name="title_activity_maps">Map</string>
+     <string name="set_as_startup_location">Do you want to set this as startup location</string>
+    <string name="yes">Yes</string>
+    <string name="please_check_internet_connection">Please check the internet connection</string>
+    <string name="please_check_gsp_settings">Please check the GPS settings</string>
+</resources>
